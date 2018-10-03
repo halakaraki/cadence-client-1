@@ -188,17 +188,20 @@ final class DecisionContextImpl implements DecisionContext, HistoryEventHandler 
     workflowClock.setReplayCurrentTimeMilliseconds(replayCurrentTimeMilliseconds);
   }
 
-  void setReplayCurrentTimeMilliseconds(HistoryHelper.DecisionEvents decision) throws IllegalArgumentException {
-    if (decision.getReplayCurrentTimeMilliseconds() < workflowClock.currentTimeMillis()){
+  void setReplayCurrentTimeMilliseconds(HistoryHelper.DecisionEvents decision)
+      throws IllegalArgumentException {
+    if (decision.getReplayCurrentTimeMilliseconds() < workflowClock.currentTimeMillis()) {
 
-      String str = String.format("workflow clock moved back. " +
-                      "Attempting to set time to %d. " +
-                      "Existing time is %d. " +
-                      "getNextDecisionEventId is %d. " +
-                      "DecisionEvents: %s " +
-                      "NewEvents: %s " +
-                      "Markers: %s" +
-                      "\n-----------",
+      String str =
+          String.format(
+              "workflow clock moved back. "
+                  + "Attempting to set time to %d. "
+                  + "Existing time is %d. "
+                  + "getNextDecisionEventId is %d. "
+                  + "DecisionEvents: %s "
+                  + "NewEvents: %s "
+                  + "Markers: %s"
+                  + "\n-----------",
               decision.getReplayCurrentTimeMilliseconds(),
               workflowClock.currentTimeMillis(),
               decision.getNextDecisionEventId(),

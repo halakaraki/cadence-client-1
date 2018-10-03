@@ -716,7 +716,7 @@ public class WorkflowExecutionUtils {
     for (HistoryEvent event : events) {
       result.append(prettyPrintHistoryEvent(event));
       result.append("\n");
-      }
+    }
     return result.toString();
   }
 
