@@ -711,6 +711,15 @@ public class WorkflowExecutionUtils {
     return result.toString();
   }
 
+  public static String prettyPrintHistoryEvents(List<HistoryEvent> events) {
+    StringBuilder result = new StringBuilder();
+    for (HistoryEvent event : events) {
+      result.append(prettyPrintHistoryEvent(event));
+      result.append("\n");
+      }
+    return result.toString();
+  }
+
   private static Object getEventAttributes(HistoryEvent event) {
     try {
       Method m = HistoryEvent.class.getMethod("get" + event.getEventType() + "EventAttributes");

@@ -361,7 +361,7 @@ class ReplayDecider {
       while (iterator.hasNext()) {
         DecisionEvents decision = iterator.next();
         context.setReplaying(decision.isReplay());
-        context.setReplayCurrentTimeMilliseconds(decision.getReplayCurrentTimeMilliseconds());
+        context.setReplayCurrentTimeMilliseconds(decision);
 
         decisionsHelper.handleDecisionTaskStartedEvent(decision);
         // Markers must be cached first as their data is needed when processing events.

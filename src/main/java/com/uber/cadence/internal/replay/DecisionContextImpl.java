@@ -17,13 +17,9 @@
 
 package com.uber.cadence.internal.replay;
 
-import com.uber.cadence.HistoryEvent;
-import com.uber.cadence.PollForDecisionTaskResponse;
-import com.uber.cadence.TimerFiredEventAttributes;
-import com.uber.cadence.WorkflowExecution;
-import com.uber.cadence.WorkflowExecutionStartedEventAttributes;
-import com.uber.cadence.WorkflowType;
+import com.uber.cadence.*;
 import com.uber.cadence.converter.DataConverter;
+import com.uber.cadence.internal.common.WorkflowExecutionUtils;
 import com.uber.cadence.internal.metrics.ReplayAwareScope;
 import com.uber.cadence.workflow.Functions.Func;
 import com.uber.cadence.workflow.Functions.Func1;
@@ -190,6 +186,29 @@ final class DecisionContextImpl implements DecisionContext, HistoryEventHandler 
       throw new IllegalArgumentException("workflow clock moved back");
     }
     workflowClock.setReplayCurrentTimeMilliseconds(replayCurrentTimeMilliseconds);
+  }
+
+  void setReplayCurrentTimeMilliseconds(HistoryHelper.DecisionEvents decision) throws IllegalArgumentException {
+    if (decision.getReplayCurrentTimeMilliseconds() < workflowClock.currentTimeMillis()){
+
+      String str = String.format("workflow clock moved back. " +
+                      "Attempting to set time to %d. " +
+                      "Existing time is %d. " +
+                      "getNextDecisionEventId is %d. " +
+                      "DecisionEvents: %s " +
+                      "NewEvents: %s " +
+                      "Markers: %s" +
+                      "\n-----------",
+              decision.getReplayCurrentTimeMilliseconds(),
+              workflowClock.currentTimeMillis(),
+              decision.getNextDecisionEventId(),
+              WorkflowExecutionUtils.prettyPrintHistoryEvents(decision.getDecisionEvents()),
+              WorkflowExecutionUtils.prettyPrintHistoryEvents(decision.getEvents()),
+              WorkflowExecutionUtils.prettyPrintHistoryEvents(decision.getMarkers()));
+
+      throw new IllegalArgumentException(str);
+    }
+    workflowClock.setReplayCurrentTimeMilliseconds(decision.getReplayCurrentTimeMilliseconds());
   }
 
   @Override
